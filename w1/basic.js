@@ -24,7 +24,7 @@ function initializeCode() {
         const myList = document.getElementById("my-list");
 
         let newList = document.createElement("li");
-        newList.innerHTML = "New item";
+        newList.innerHTML = document.getElementById("my-textarea").value;
 
         myList.appendChild(newList);
 
