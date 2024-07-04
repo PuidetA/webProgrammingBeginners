@@ -18,5 +18,17 @@ function initializeCode() {
         document.getElementById("my-h1").innerHTML = "Moi maailma";
     });
 
+    const addDataButton = document.getElementById("add-data");
+    
+    addDataButton.addEventListener("click", function() {
+        const myList = document.getElementById("my-list");
+
+        let newList = document.createElement("li");
+        newList.innerHTML = "New item";
+
+        myList.appendChild(newList);
+
+    });
+
     
 }
