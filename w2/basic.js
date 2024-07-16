@@ -40,6 +40,12 @@ addNewRow.addEventListener("click", function() {
     newRowData.insertCell(1).innerHTML = document.getElementById("input-email").value;
     newRowData.insertCell(2).innerHTML = document.getElementById("input-admin").checked ? "X" : "-";
 
+
+});
+
+const wipeDataButton = document.getElementById("empty-table");
+
+wipeDataButton.addEventListener("click", function() {
     document.getElementById("input-username").value = "";
     document.getElementById("input-email").value = "";
     document.getElementById("input-admin").checked = false;
