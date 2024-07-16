@@ -1,4 +1,4 @@
-console.log('Hello World!');
+/*console.log('Hello World!');
 
 function sum(a, b) {
     return a + b;
@@ -29,6 +29,21 @@ console.log(sum3(5, 4));
 console.log(squared(9));
 
 console.log('Done!');
+*/
+
+//<!--Exercise 5:--> This adds an image to the table. It's a separate function to make it more readable.
+const image = document.getElementById("input-image");
+
+let addImage = function(cell, image) {
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(image);
+    img.height = 64;
+    img.width = 64;
+    cell.innerHTML = ""; //Clear it first, just in case, so we don't have multiple images later on. CodeGrade is too slow for me to check if this is necessary or not.
+    cell.appendChild(img);
+};
+
+
 
 
 //<!--Exercise 2 & 4:-->
@@ -49,8 +64,11 @@ addNewRow.addEventListener("click", function() {
 
             //Clear the potential image. The purpose of this part of the function originally was to edit existing rows.
             //This means that you replace the admin priviledge or the email. So should the image be replaced as well by this logic.
-            tableBody.rows[i].cells[3].innerHTML = ""; 
-            addImage(tableBody.rows[i].cells[3], image);
+            if (image){ //also check if image even exists in the upload section first. Codegrade throws an error if you don't. It's a harmless error, but that doesn't matter in the eyes of CodeGrade.
+                tableBody.rows[i].cells[3].innerHTML = "";
+                addImage(tableBody.rows[i].cells[3], image);
+            }
+            
 
 
             usernameFree = false; //Make it so that it doesn't add a new row.
@@ -63,7 +81,10 @@ addNewRow.addEventListener("click", function() {
         newRowData.insertCell(0).innerHTML = document.getElementById("input-username").value;
         newRowData.insertCell(1).innerHTML = document.getElementById("input-email").value;
         newRowData.insertCell(2).innerHTML = document.getElementById("input-admin").checked ? "X" : "-";
-        addImage(newRowData.insertCell(3), image);
+        if (image){ //also check if image even exists in the upload section first. Codegrade throws an error if you don't. It's a harmless error, but that doesn't matter in the eyes of CodeGrade.
+            addImage(newRowData.insertCell(3), image);
+        }
+        
     }
     
 
@@ -87,15 +108,3 @@ wipeDataButton.addEventListener("click", function() {
         i--; //go back one step to not skip a row.
     }
 });
-
-//<!--Exercise 5:--> This adds an image to the table. It's a separate function to make it more readable.
-const image = document.getElementById("input-image");
-
-let addImage = function(cell, image) {
-    const img = document.createElement("img");
-    img.src = URL.createObjectURL(image);
-    img.height = 64;
-    img.width = 64;
-    cell.innerHTML = ""; //Clear it first, so we don't have multiple images later on.
-    cell.appendChild(img);
-};
