@@ -1,5 +1,4 @@
 /*Exercise 2 & 3:*/
-
 body {
     font-family: "Verdana, Arial, sans-serif";
 }
@@ -37,4 +36,12 @@ table {
 
 h1 {
     text-align: center;
+}
+
+/*Exercise 5: */
+.table-row-over45 {
+    background-color: #abffbd !important;
+}
+.table-row-under25 {
+    background-color: #ff9e9e !important;
 }
