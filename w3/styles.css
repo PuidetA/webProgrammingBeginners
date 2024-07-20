@@ -6,11 +6,13 @@ body {
 table td {
     padding: 6px;
     border-bottom: 1px solid gray;
-    background-color: #ffffff;
 }
 /*Source used: https://www.w3schools.com/cssref/sel_nth-child.php */
-table td:nth-child(even) {
+table tr:nth-child(even) {
     background-color: #f2f2f2;
+}
+table tr{
+    background-color: #ffffff;
 }
 
 table th {

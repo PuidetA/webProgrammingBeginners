@@ -36,30 +36,23 @@ async function populateTable() {
         const employmentPercentage = ((employmentAmount / population) * 100).toFixed(2);
         
 
-        // Create new row and the cells for the data to be inserted into
+        // Create a new row
         const newRow = document.createElement('tr');
+
+        // Source: https://www.shecodes.io/athena/3913-how-to-add-a-class-to-an-html-element-in-javascript
+        // Check if a row should be coloured different based on percentage.
+        if (employmentPercentage > 45){
+            newRow.classList.add('table-row-over45');
+        }
+        if (employmentPercentage < 25){
+            newRow.classList.add('table-row-under25');
+        }
+
+        // Create new cells
         const newCell1 = document.createElement('td');
         const newCell2 = document.createElement('td');
         const newCell3 = document.createElement('td');
         const newCell4 = document.createElement('td');
-
-        // Source: https://www.shecodes.io/athena/3913-how-to-add-a-class-to-an-html-element-in-javascript
-        // Check if a row should be coloured different based on percentage.
-        // The problem: If we colour the <tr> element, the <td> elements will overwrite the <tr> element.
-        if (employmentPercentage > 45){
-            newRow.classList.add('table-row-over45'); // We can't JUST add the class to the row. For some reason !important didn't work.
-            newCell1.classList.add('table-row-over45'); // We need to also add it to the cells.
-            newCell2.classList.add('table-row-over45');
-            newCell3.classList.add('table-row-over45');
-            newCell4.classList.add('table-row-over45');
-        }
-        if (employmentPercentage < 25){
-            newRow.classList.add('table-row-under25');
-            newCell1.classList.add('table-row-under25');
-            newCell2.classList.add('table-row-under25');
-            newCell3.classList.add('table-row-under25');
-            newCell4.classList.add('table-row-under25');
-        }
 
 
         // #### ADDING DATA TO THE TABLE ####
