@@ -14,9 +14,13 @@ document.getElementById('submit-data').addEventListener('click', async function(
     data.forEach(result => {
         const showData = document.createElement('div');
         showData.classList.add('show-data');
+        
         // used https://jsonviewer.stack.hu/ to understand the structure of the json
         // Whoever said JSONs are extremely easy to read is a liar.
-        const showImg = result.show.image ? result.show.image.medium : '';
+
+        //assumption: result.show.image.medium is the standardized picture size.
+        //I chose this, because original could be any size, and I don't want to find out in case it is.
+        const showImg = result.show.image ? result.show.image.medium : ''; 
         const showTitle = result.show.name;
         const showSummary = result.show.summary;
         
