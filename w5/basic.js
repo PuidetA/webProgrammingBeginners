@@ -11,6 +11,7 @@ async function fetchAndCreateMap() {
     //const dataStatNegative = await fetchingStatNegative.json()
 
     // #### ADDING FEATURES ####
+    // Exercise 2: adding tooltips
     // this comes before making the map to initalize everything first
     // Add tooltip with municipality names via leaflet
     // SOURCE: https://leafletjs.com/reference.html#geojson-oneachfeature
@@ -19,6 +20,8 @@ async function fetchAndCreateMap() {
     };
 
     
+
+
     // #### CREATING MAP ####
     let map = L.map('map', {
         minZoom: -3
@@ -31,7 +34,10 @@ async function fetchAndCreateMap() {
 
     map.fitBounds(geoJsonL.getBounds())
 
-    
+    // Exercise 3: adding background map via OpenStreetMap
+    let osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: "© OpenStreetMap"
+    }).addTo(map)
 
 }
 
