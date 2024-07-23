@@ -52,6 +52,25 @@ async function fetchAndCreateMap() {
     };
 
 
+    // ### Exercise 5: Conditional map styling. Adding hue based on net migration
+    const getColour = (feature) => {
+        const areaCode = "KU" + feature.properties.kunta;
+        const positiveMigration = positiveMigrationMap[areaCode];
+        const negativeMigration = negativeMigrationMap[areaCode];
+
+        let hue = Math.pow(positiveMigration/negativeMigration, 3) * 60;
+        if (hue > 120) {
+            hue = 120;
+        }
+        return `hsl(${hue}, 75%, 50%)`;
+    };
+    const mapColour = (feature) => {
+        return {
+        fillColor: getColour(feature),
+        color: getColour(feature)
+    }
+    };
+
 
 
     // #### CREATING MAP ####
@@ -61,8 +80,10 @@ async function fetchAndCreateMap() {
 
     let geoJsonL = L.geoJSON(dataGeo, {
         weight: 2,
-        onEachFeature: addTooltip,
-        onEachFeature: addPopup
+        onEachFeature: (feature, layer) => {
+            addTooltip(feature, layer);
+            addPopup(feature, layer);},
+        style: mapColour
     }).addTo(map)
 
     map.fitBounds(geoJsonL.getBounds())
