@@ -60,7 +60,7 @@ async function fetchMunicipalityCodes() {
     return municipalityCodes;
 };
 
-document.getElementById('add-data').addEventListener('click', async (e) => {
+document.getElementById('submit-data').addEventListener('click', async (e) => {
     e.preventDefault();
     const name = document.getElementById('input-area').value.toLowerCase();
     const municipalityCodes = await fetchMunicipalityCodes();
@@ -88,7 +88,7 @@ function predictData(data) {
     return Math.round(predictedData);
 };
 
-document.getElementById('predict-data').addEventListener('click', () => {
+document.getElementById('add-data').addEventListener('click', () => {
     const data = chart.data.datasets[0].values;
     const predictedData = predictData(data);
     const predictedYear = (parseInt(currentYears.slice(-1)[0]) + 1).toString()
