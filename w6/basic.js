@@ -60,7 +60,7 @@ async function fetchMunicipalityCodes() {
     return municipalityCodes;
 };
 
-document.getElementById('submit-data').addEventListener('click', async (e) => {
+document.getElementById('add-data').addEventListener('click', async (e) => {
     e.preventDefault();
     const name = document.getElementById('input-area').value.toLowerCase();
     const municipalityCodes = await fetchMunicipalityCodes();
