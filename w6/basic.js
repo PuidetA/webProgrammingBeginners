@@ -6,7 +6,8 @@ const YEARS = [
     '2020', '2021'
 ];
 
-async function fetchPopulationData() {
+async function fetchPopulationData(areaCode = "SSS") {
+
     const response = await fetch("https://statfin.stat.fi/PxWeb/api/v1/en/StatFin/synt/statfin_synt_pxt_12dy.px", {
         method: "POST",
         headers: {
@@ -25,7 +26,7 @@ async function fetchPopulationData() {
                     code: "Alue",
                     selection: {
                         filter: "item",
-                        values: ["SSS"]
+                        values: [areaCode]
                     }
                 },
                 {
@@ -46,12 +47,32 @@ async function fetchPopulationData() {
 };
 
 async function fetchMunicipalityCodes() {
+    const response = await fetch("https://statfin.stat.fi/PxWeb/api/v1/en/StatFin/synt/statfin_synt_pxt_12dy.px");
+    const data = await response.json();
 
+    const municipalityCodes = {};
+    data.variables[1].valueTexts.forEach((name, index) => {
+        municipalityCodes[name.toLowerCase()] = data.variables[1].values[index];
+    });
+    return municipalityCodes;
 };
 
-async function fetchMunicipalityNames() {
+document.getElementById('submit-data').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('input-area').value.toLowerCase();
+    const municipalityCodes = await fetchMunicipalityCodes();
+    const municipalityCode = municipalityCodes[name];
 
-};
+    if (municipalityCode) {
+        const populationData = await fetchPopulationData(municipalityCode);
+        chart.update({
+            labels: YEARS,
+            datasets: [{ values: populationData }]
+        });
+    } else {
+        console.log('Municipality not found');
+    }
+});
 
 
 let chart; // I asked advice from a friend about how to handle the chart object being returned,
@@ -66,7 +87,7 @@ async function makeChart() {
             labels: YEARS,
             datasets: [{values: data}]
         },
-        title: "Title here"
+        title: "Population data"
     })
 };
 
