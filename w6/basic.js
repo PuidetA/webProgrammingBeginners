@@ -119,6 +119,7 @@ async function makeChart() {
     })
 };
 
+/* previous code that let me navigate via <a href="#" id="navigation">View birth and death charts</a> method.
 document.getElementById('navigation').addEventListener('click', async (e) => {
     e.preventDefault();
     const name = document.getElementById('input-area').value.toLowerCase();
@@ -131,6 +132,25 @@ document.getElementById('navigation').addEventListener('click', async (e) => {
     }
     
     window.location.href = `newchart.html?municipalityCode=${municipalityCode}`;
+});*/
+
+document.getElementById('navigation').addEventListener('click', async (e) => {
+    e.preventDefault();
+    let name = document.getElementById('input-area').value.toLowerCase();
+    if (!name) {
+        name = 'whole country';
+    }
+    const municipalityCodes = await fetchMunicipalityCodes();
+    const municipalityCode = municipalityCodes[name];
+
+    
+    if (!municipalityCode) {
+        console.log('Municipality not found');
+        return;
+    }
+    document.getElementById('municipalityCode').value = municipalityCode;
+    document.getElementById('redirectForm').submit();
 });
+
 
 makeChart();
