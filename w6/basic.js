@@ -6,6 +6,8 @@ const YEARS = [
     '2020', '2021'
 ];
 
+let currentYears = [...YEARS]; //Source: https://www.freecodecamp.org/news/three-dots-operator-in-javascript/
+
 async function fetchPopulationData(areaCode = "SSS") {
 
     const response = await fetch("https://statfin.stat.fi/PxWeb/api/v1/en/StatFin/synt/statfin_synt_pxt_12dy.px", {
@@ -19,7 +21,7 @@ async function fetchPopulationData(areaCode = "SSS") {
                     code: "Vuosi",
                     selection: {
                         filter: "item",
-                        values: YEARS
+                        values: currentYears
                     }
                 },
                 {
@@ -64,14 +66,40 @@ document.getElementById('submit-data').addEventListener('click', async (e) => {
     const municipalityCode = municipalityCodes[name];
 
     if (municipalityCode) {
+        currentYears = [...YEARS];
         const populationData = await fetchPopulationData(municipalityCode);
         chart.update({
-            labels: YEARS,
+            labels: currentYears,
             datasets: [{ values: populationData }]
         });
     } else {
         console.log('Municipality not found');
     }
+});
+
+function predictData(data) {
+    let dataDeltas = 0;
+    for (let i = 0; i < data.length-1; i++) {
+        dataDeltas += data[i + 1] - data[i];
+    }
+    const meanDelta = dataDeltas / (data.length - 1);
+    const predictedData = data[data.length - 1] + meanDelta;
+    return Math.round(predictedData);
+};
+
+document.getElementById('predict-data').addEventListener('click', () => {
+    const data = chart.data.datasets[0].values;
+    const predictedData = predictData(data);
+    const predictedYear = (parseInt(currentYears.slice(-1)[0]) + 1).toString()
+    
+    currentYears.push(predictedYear);
+    data.push(predictedData);
+
+    chart.update({
+        labels: currentYears,
+        datasets: [{ values: data}]
+    });
+    
 });
 
 
@@ -84,7 +112,7 @@ async function makeChart() {
         type: "line",
         colors: ['#eb5146'],
         data: {
-            labels: YEARS,
+            labels: currentYears,
             datasets: [{values: data}]
         },
         title: "Population data"
