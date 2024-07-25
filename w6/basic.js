@@ -7,6 +7,7 @@ const YEARS = [
 ];
 
 let currentYears = [...YEARS]; //Source: https://www.freecodecamp.org/news/three-dots-operator-in-javascript/
+let currentPage = 'home';
 
 async function fetchPopulationData(areaCode = "SSS") {
 
@@ -91,14 +92,13 @@ document.getElementById('predict-data').addEventListener('click', () => {
     const data = chart.data.datasets[0].values;
     const predictedData = predictData(data);
     const predictedYear = (parseInt(currentYears.slice(-1)[0]) + 1).toString()
-    
+
     currentYears.push(predictedYear);
     data.push(predictedData);
 
     chart.update({
         labels: currentYears,
-        datasets: [{ values: data}]
-    });
+        datasets: [{ values: data}],    });
     
 });
 
@@ -112,12 +112,25 @@ async function makeChart() {
         type: "line",
         colors: ['#eb5146'],
         data: {
-            labels: currentYears,
+            labels: currentYears, // x_labels didn't work. Used this, since it ends up on the x-axis anyway.
             datasets: [{values: data}]
         },
-        title: "Population data"
+        title: "Population growth data in Finland"
     })
 };
 
+document.getElementById('navigation').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('input-area').value.toLowerCase();
+    const municipalityCodes = await fetchMunicipalityCodes();
+    const municipalityCode = municipalityCodes[name];
+
+    if (!municipalityCode) {
+        console.log('Municipality not found');
+        return;
+    }
+    
+    window.location.href = `newchart.html?municipalityCode=${municipalityCode}`;
+});
 
 makeChart();
