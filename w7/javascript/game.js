@@ -50,6 +50,7 @@ class PlayGame extends Phaser.Scene {
         this.load.image("platform", "assets/platform.png")
         this.load.spritesheet("dude", "assets/dude.png", {frameWidth: 32, frameHeight: 48})
         this.load.image("backgroundSky", "assets/sky.png")
+        this.load.image("bomb", "assets/bomb.png")
         
     }
 
@@ -62,7 +63,7 @@ class PlayGame extends Phaser.Scene {
             immovable: true,
             allowGravity: false
         })
-        for(let i = 0; i < 10; i++) { // Unlike the lecture I used 10 platforms, since I thought 20 was too many.
+        for(let i = 0; i < 10; i++) { // added less platforms to clog the screen less
             this.groundGroup.create(Phaser.Math.Between(0, game.config.width), 
             Phaser.Math.Between(0, game.config.height), "platform");
         }
@@ -93,20 +94,17 @@ class PlayGame extends Phaser.Scene {
         this.starsGroup = this.physics.add.group({})
         this.physics.add.overlap(this.dude, this.starsGroup, this.collectStar, null, this)
         this.add.image(16, 16, "star")
-        this.triggerTimer = this.time.addEvent({
-            callback: this.addGround,
-            callbackScope: this,
-            delay: 1700, //changed timer to have a better delay, so platforms don't block each other
-            loop: true
-        })
+        
 
 
         // Score
         this.scoreText = this.add.text(32, 0, "0", {fontSize: "30px", fill: "#ffffff"})
 
 
-        // Enemy
-
+        // Bombs
+        this.bombGroup = this.physics.add.group({}) // Bombs fall through the floor on purpose
+        this.physics.add.overlap(this.dude, this.bombGroup, this.gameDone, null, this)
+        
 
 
         // Colliders
@@ -117,7 +115,35 @@ class PlayGame extends Phaser.Scene {
         // Input
         this.cursors = this.input.keyboard.createCursorKeys()
 
+
+
+
+
+
+
+
+        // TIMERS
+        this.triggerTimer = this.time.addEvent({ // timer for adding new platforms and stars
+            callback: this.addGround,
+            callbackScope: this,
+            delay: 1700, //changed timer to have a better delay, so platforms don't block each other
+            loop: true
+        })
+
+        this.triggerTimer = this.time.addEvent({ // timer for adding new enemies (bombs)
+            callback: this.addEnemy,
+            callbackScope: this,
+            delay: 2000,
+            loop: true
+        })
+
+
+
+
     }
+
+
+
 
     // Game Mechanics
     collectStar(dude, start) {
@@ -125,6 +151,7 @@ class PlayGame extends Phaser.Scene {
         this.score += 1
         this.scoreText.setText(this.score)
     }
+
     addGround() {
         console.log("Adding new stuff!")
         // Moving platforms
@@ -137,9 +164,29 @@ class PlayGame extends Phaser.Scene {
             this.starsGroup.create(Phaser.Math.Between(0, game.config.width), 0, "star")
             this.starsGroup.setVelocityY(gameOptions.dudeSpeed)
         }
+    }
 
+    addEnemy() {
+        console.log("Dropping a new enemy!")
+        this.bombGroup.create(Phaser.Math.Between(0, game.config.width), 0, "bomb")
+        this.bombGroup.setVelocityY(gameOptions.dudeSpeed)
 
     }
+
+    gameDone(dude, bomb) {
+        this.gameOverText = this.add.text(game.config.width / 2, game.config.height / 2, "Game Over. Score:" + this.score, {fontSize: "30px", fill: "#ffffff"})
+        this.gameOverText.setOrigin(0.5)
+        this.physics.pause()
+
+        this.triggerTimer = this.time.addEvent({
+            delay: 1000,
+            callback: () => {this.scene.start("PlayGame")},
+            loop: false
+        })
+
+    }
+
+    
 
     update() {
 
@@ -158,9 +205,10 @@ class PlayGame extends Phaser.Scene {
         if(this.cursors.up.isDown && this.dude.body.touching.down) { // jump
             this.dude.body.velocity.y = -gameOptions.dudeGravity / 1.3
         }
-
+        //Falling out of map.
         if(this.dude.y > game.config.height || this.dude.y < 0) {
-            this.scene.start("PlayGame")
+            this.gameDone()
         }
+
     }
 }
