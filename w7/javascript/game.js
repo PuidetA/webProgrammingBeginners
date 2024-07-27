@@ -96,7 +96,7 @@ class PlayGame extends Phaser.Scene {
         this.triggerTimer = this.time.addEvent({
             callback: this.addGround,
             callbackScope: this,
-            delay: 700,
+            delay: 1700, //changed timer to have a better delay, so platforms don't block each other
             loop: true
         })
 
